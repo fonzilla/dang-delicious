@@ -49,6 +49,11 @@ exports.createStore = async (req,res) => {
   res.redirect(`/store/${store.slug}`);
 };
 
+exports.getStoreBySlug = async (req, res, next) => {
+  const store = await Store.findOne({ slug: req.params.slug });
+  res.render('store', { store, title: store.name })
+}
+
 exports.getStores = async (req, res) => {
   const stores = await Store.find()
   // console.log(stores);
@@ -71,3 +76,16 @@ exports.updateStore = async (req,res) => {
   res.redirect(`/stores/${store.id}/edit`);
   //redirect to the store and tell user it worked
 };
+
+exports.getStoresByTag = async (req, res) => {
+  const tag = req.params.tag
+  const tagQuery = tag || { $exists: true }
+  const tagsPromise = Store.getTagsList();
+  const storesPromise = Store.find({ tags: tagQuery })
+  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
+
+  res.render('tags', { tags, title: 'Tags', tag, stores})
+}
+
+
+
