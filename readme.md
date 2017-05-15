@@ -1,6 +1,3 @@
-## What is this?
-
-Just you wait folks!
 
 ## Sample Data
 
